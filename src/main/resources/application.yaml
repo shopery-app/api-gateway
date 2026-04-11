@@ -1,3 +1,85 @@
+server:
+  port: ${SERVER_PORT:7070}
+
 spring:
   application:
     name: api-gateway
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+  cloud:
+    gateway:
+      mvc:
+        default-filters:
+          - name: RequestLogging
+          - name: RequestRateLimiter
+            args:
+              rate-limiter: "#{@redisRateLimiter}"
+              key-resolver: "#{@ipKeyResolver}"
+
+        #TODO: change with real shopery services
+        routes:
+          - id: product-service
+            uri: lb://PRODUCT-SERVICE
+            predicates:
+              - Path=/api/products/**
+            filters:
+              - StripPrefix=1
+
+          - id: order-service
+            uri: lb://ORDER-SERVICE
+            predicates:
+              - Path=/api/orders/**
+            filters:
+              - StripPrefix=1
+
+eureka:
+  client:
+    enabled: ${EUREKA_ENABLED:true}
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+
+management:
+  server:
+    port: ${MANAGEMENT_PORT:9090}
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, gateway, metrics
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    redis:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLE_RATE:1.0}
+  otlp:
+    tracing:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
+
+
+rate-limiter:
+  replenish-rate: ${RATE_LIMIT_RPS:20}
+  burst-capacity: ${RATE_LIMIT_BURST:40}
+  requested-tokens: 1
+
+logging:
+  level:
+    az.shopery: ${LOG_LEVEL:INFO}
+    org.springframework.cloud.gateway: ${GW_LOG_LEVEL:INFO}
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{traceId}/%X{spanId}] %-5level %logger{36} - %msg%n"
