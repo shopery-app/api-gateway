@@ -14,58 +14,13 @@ spring:
       ssl:
         enabled: ${REDIS_SSL:false}
 
-  cloud:
-    gateway:
-      server:
-        webmvc:
-          routes:
-            # public
-            - id: shopery-auth
-              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
-              predicates:
-                - Path=/api/v1/auth/**
+shopery:
+  base-url: ${SHOPERY_BASE_URL:http://localhost:8080}
 
-            - id: shopery-shops
-              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
-              predicates:
-                - Path=/api/v1/shops/**
-
-            - id: shopery-products
-              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
-              predicates:
-                - Path=/api/v1/products/**
-
-            - id: shopery-blogs
-              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
-              predicates:
-                - Path=/api/v1/blogs/**
-
-            - id: shopery-dropdowns
-              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
-              predicates:
-                - Path=/api/v1/dropdowns/**
-
-            - id: shopery-ws
-              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
-              predicates:
-                - Path=/ws,/ws/**
-
-            # protected
-            - id: shopery-user-me
-              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
-              predicates:
-                - Path=/api/v1/users/me/**
-
-            - id: shopery-admin
-              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
-              predicates:
-                - Path=/api/v1/admins/**
-
-            # fallback for other authenticated endpoints
-            - id: shopery-other-api
-              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
-              predicates:
-                - Path=/api/v1/**
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
 
 management:
   server:
