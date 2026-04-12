@@ -9,44 +9,63 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:}gQAAAAAAAU7PAAIncDFkOGNhYjE2ZDIwNWU0YzQ5ODlhYzgxMWZjNmE4OWZiYXAxODU3MTE
+      password: ${REDIS_PASSWORD:}
       timeout: 2000ms
       ssl:
         enabled: ${REDIS_SSL:false}
 
   cloud:
     gateway:
-      mvc:
-        default-filters:
-          - name: RequestLogging
-          - name: RequestRateLimiter
-            args:
-              rate-limiter: "#{@redisRateLimiter}"
-              key-resolver: "#{@ipKeyResolver}"
+      server:
+        webmvc:
+          routes:
+            # public
+            - id: shopery-auth
+              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
+              predicates:
+                - Path=/api/v1/auth/**
 
-        #TODO: change with real shopery services
-        routes:
-          - id: product-service
-            uri: lb://PRODUCT-SERVICE
-            predicates:
-              - Path=/api/products/**
-            filters:
-              - StripPrefix=1
+            - id: shopery-shops
+              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
+              predicates:
+                - Path=/api/v1/shops/**
 
-          - id: order-service
-            uri: lb://ORDER-SERVICE
-            predicates:
-              - Path=/api/orders/**
-            filters:
-              - StripPrefix=1
+            - id: shopery-products
+              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
+              predicates:
+                - Path=/api/v1/products/**
 
-eureka:
-  client:
-    enabled: ${EUREKA_ENABLED:true}
-    service-url:
-      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
-  instance:
-    prefer-ip-address: true
+            - id: shopery-blogs
+              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
+              predicates:
+                - Path=/api/v1/blogs/**
+
+            - id: shopery-dropdowns
+              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
+              predicates:
+                - Path=/api/v1/dropdowns/**
+
+            - id: shopery-ws
+              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
+              predicates:
+                - Path=/ws,/ws/**
+
+            # protected
+            - id: shopery-user-me
+              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
+              predicates:
+                - Path=/api/v1/users/me/**
+
+            - id: shopery-admin
+              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
+              predicates:
+                - Path=/api/v1/admins/**
+
+            # fallback for other authenticated endpoints
+            - id: shopery-other-api
+              uri: ${SHOPERY_BASE_URL:http://localhost:8080}
+              predicates:
+                - Path=/api/v1/**
 
 management:
   server:
@@ -73,7 +92,6 @@ management:
   otlp:
     tracing:
       endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
-
 
 rate-limiter:
   replenish-rate: ${RATE_LIMIT_RPS:20}
