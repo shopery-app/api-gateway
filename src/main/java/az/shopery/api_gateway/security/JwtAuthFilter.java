@@ -36,9 +36,7 @@ public class JwtAuthFilter implements Filter, Ordered {
             "/api/v1/shops/**",
             "/api/v1/products/**",
             "/api/v1/blogs/**",
-            "/api/v1/dropdowns/**",
-            "/ws",
-            "/ws/**"
+            "/api/v1/dropdowns/**"
     );
 
     private static final List<String> ADMIN_PATHS = List.of(
