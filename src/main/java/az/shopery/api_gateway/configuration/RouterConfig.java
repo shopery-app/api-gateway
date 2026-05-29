@@ -23,7 +23,7 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> authRoutes() {
         return route("shopery-auth")
-                .route(req -> req.path().startsWith("/api/v1/auth/"), http())
+                .route(req -> req.path().startsWith("/api/v1/auth"), http())
                 .before(uri(URI.create(shoperyBaseUrl)))
                 .build();
     }
@@ -31,7 +31,7 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> shopRoutes() {
         return route("shopery-shops")
-                .route(req -> req.path().startsWith("/api/v1/shops/"), http())
+                .route(req -> req.path().startsWith("/api/v1/shops"), http())
                 .before(uri(URI.create(shoperyBaseUrl)))
                 .build();
     }
@@ -39,7 +39,7 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> productRoutes() {
         return route("shopery-products")
-                .route(req -> req.path().startsWith("/api/v1/products/"), http())
+                .route(req -> req.path().startsWith("/api/v1/products"), http())
                 .before(uri(URI.create(shoperyBaseUrl)))
                 .build();
     }
@@ -47,7 +47,7 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> blogRoutes() {
         return route("shopery-blogs")
-                .route(req -> req.path().startsWith("/api/v1/blogs/"), http())
+                .route(req -> req.path().startsWith("/api/v1/blogs"), http())
                 .before(uri(URI.create(shoperyBaseUrl)))
                 .build();
     }
@@ -55,7 +55,7 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> dropdownRoutes() {
         return route("shopery-dropdowns")
-                .route(req -> req.path().startsWith("/api/v1/dropdowns/"), http())
+                .route(req -> req.path().startsWith("/api/v1/dropdowns"), http())
                 .before(uri(URI.create(shoperyBaseUrl)))
                 .build();
     }
@@ -63,7 +63,7 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> adminRoutes() {
         return route("shopery-admin")
-                .route(req -> req.path().startsWith("/api/v1/admins/"), http())
+                .route(req -> req.path().startsWith("/api/v1/admins"), http())
                 .before(uri(URI.create(shoperyBaseUrl)))
                 .before(this::injectIdentityHeaders)
                 .build();
@@ -72,7 +72,7 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> userMeRoutes() {
         return route("shopery-user-me")
-                .route(req -> req.path().startsWith("/api/v1/users/me/"), http())
+                .route(req -> req.path().startsWith("/api/v1/users/me"), http())
                 .before(uri(URI.create(shoperyBaseUrl)))
                 .before(this::injectIdentityHeaders)
                 .build();
@@ -81,7 +81,7 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> otherApiRoutes() {
         return route("shopery-other-api")
-                .route(req -> req.path().startsWith("/api/v1/"), http())
+                .route(req -> req.path().startsWith("/api/v1"), http())
                 .before(uri(URI.create(shoperyBaseUrl)))
                 .before(this::injectIdentityHeaders)
                 .build();

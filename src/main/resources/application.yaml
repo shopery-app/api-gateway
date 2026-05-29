@@ -22,37 +22,6 @@ application:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
 
-management:
-  server:
-    port: ${MANAGEMENT_PORT:9090}
-  endpoints:
-    web:
-      exposure:
-        include: health, info, prometheus, gateway, metrics
-  endpoint:
-    health:
-      show-details: always
-      probes:
-        enabled: true
-  health:
-    redis:
-      enabled: true
-  metrics:
-    tags:
-      application: ${spring.application.name}
-
-  tracing:
-    sampling:
-      probability: ${TRACING_SAMPLE_RATE:1.0}
-  otlp:
-    tracing:
-      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
-
-rate-limiter:
-  replenish-rate: ${RATE_LIMIT_RPS:20}
-  burst-capacity: ${RATE_LIMIT_BURST:40}
-  requested-tokens: 1
-
 logging:
   level:
     az.shopery: ${LOG_LEVEL:INFO}
