@@ -1,0 +1,6 @@
+ext {
+    v = [
+            springCloud    : "2025.1.3",
+            lombok         : "1.18.48",
+    ]
+}

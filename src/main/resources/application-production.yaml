@@ -1,0 +1,29 @@
+server:
+  port: ${PORT:7070}
+
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD:}
+      ssl:
+        enabled: ${REDIS_SSL:true}
+
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            core-ms:
+              - uri: ${CORE_MS}
+            chat-ms:
+              - uri: ${CHAT_MS}
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+
+  frontend:
+    base-url: ${FRONTEND_BASE_URL}

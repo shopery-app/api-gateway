@@ -1,0 +1,28 @@
+server:
+  port: ${PORT:7070}
+
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      ssl:
+        enabled: false
+
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            core-ms:
+              - uri: ${CORE_MS:http://localhost:8080}
+            chat-ms:
+              - uri: ${CHAT_MS:http://localhost:8093}
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY:qYrUvRZbMm1gxAVfVG8KtJPqfLf3A2qkwo0U7cqDC+HqU0ZVOz+N4VkkFqaQoxlc}
+
+  frontend:
+    base-url: ${FRONTEND_BASE_URL:http://localhost:5173}
